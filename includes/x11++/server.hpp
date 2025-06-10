@@ -30,6 +30,12 @@ namespace x {
             void ungrabAnyKey();
             void grabAnyButton(bool condition = false);
             Event* getEvent();
+            void quit();
+            //
+            template<typename Out >
+            Out cast(auto* in){
+                return reinterpret_cast<Out>(in);
+            }
     
         private:
             void addRootSelectInput(long evetMask);
@@ -37,6 +43,7 @@ namespace x {
             Event event;
             const char* displayname = nullptr;
             MaskBit eventMask;
+            bool stop = false;
             std::vector<EventCallback> listeners_keyPress;
             std::vector<EventCallback> listeners_keyRelease;
             std::vector<EventCallback> listeners_buttonPress;
