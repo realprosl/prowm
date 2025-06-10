@@ -1,4 +1,4 @@
-#include "x11++/eventType.hpp"
+#include <x11++/eventType.hpp>
 #include<x11++/server.hpp>
 #include<iostream>
 
@@ -9,7 +9,7 @@ int main(){
     if(!server.connect()) return 1;
 
     server.addRootEventListener(x::EventType::keyPress, [&](x::Event* event){
-        std::cout << event->xkey.subwindow << "\n";
+        std::cout << event->xkey.type << "\n";
         std::cout << "keyPress\n"; 
     });
 

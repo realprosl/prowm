@@ -1,6 +1,6 @@
-#include "X11/X.h"
-#include "X11/Xlib.h"
-#include "x11++/eventType.hpp" // Asegúrate de que esta ruta es correcta
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <x11++/eventType.hpp> // Asegúrate de que esta ruta es correcta
 #include <x11++/server.hpp>
 #include <mask.hpp> // Asegúrate de que esta ruta es correcta
 #include <iostream> // Para mensajes de error/depuración

@@ -1,7 +1,7 @@
 #include<X11/Xlib.h>
 #include<X11/X.h>
 #include <functional>
-
+#include<mask.hpp>
 
 namespace x {
 
@@ -25,6 +25,10 @@ namespace x {
             void addRootEventListener(EventType type,EventCallback listener);
             void nextEvent();
             void listen();
+            void grabAnyKey(bool condition = false);
+            void ungrabAnyButton();
+            void ungrabAnyKey();
+            void grabAnyButton(bool condition = false);
             Event* getEvent();
     
         private:
@@ -32,7 +36,7 @@ namespace x {
             Display* display = nullptr;
             Event event;
             const char* displayname = nullptr;
-            long eventMask = 0;
+            MaskBit eventMask;
             std::vector<EventCallback> listeners_keyPress;
             std::vector<EventCallback> listeners_keyRelease;
             std::vector<EventCallback> listeners_buttonPress;

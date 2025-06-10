@@ -30,6 +30,25 @@
       "-I/usr/local/Cellar/libxdmcp/1.1.5/include",
       "-c",
       "-o",
+      "build/mask.o",
+      "src/mask.cpp"
+    ],
+    "directory": "/Users/apg/dev/c++/x11++",
+    "file": "/Users/apg/dev/c++/x11++/src/mask.cpp",
+    "output": "/Users/apg/dev/c++/x11++/build/mask.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Iincludes",
+      "-I/usr/local/Cellar/libx11/1.8.12/include",
+      "-I/usr/local/Cellar/xorgproto/2024.1/include",
+      "-I/usr/local/Cellar/libxcb/1.17.0/include",
+      "-I/usr/local/Cellar/libxau/1.0.12/include",
+      "-I/usr/local/Cellar/libxdmcp/1.1.5/include",
+      "-c",
+      "-o",
       "build/main.o",
       "src/main.cpp"
     ],
