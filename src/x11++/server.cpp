@@ -4,28 +4,19 @@
 #include <x11++/server.hpp>
 #include <mask.hpp> // Asegúrate de que esta ruta es correcta
 #include <iostream> // Para mensajes de error/depuración
-
-// Necesitas X11/Xutil.h para XKeysymToKeycode, aunque no lo usemos directamente aquí
-// y X11/keysym.h para AnyKey, AnyModifier, etc.
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 
 namespace x {
 
 // Constructor y destructor
-Server::Server(const char* _displayname) : displayname(_displayname) {
-    // Inicializar eventMask aquí si tu clase Mask lo requiere
-    // eventMask = Mask(); // Si Mask tiene un constructor por defecto
-}
+Server::Server(const char* _displayname) : displayname(_displayname) {}
 
 Server::~Server(){
-    // Asegúrate de liberar los grabs antes de desconectar el display
     ungrabAnyKey();
     ungrabAnyButton();
     disconnect();
 }
-
-// ... (Tus métodos connect, disconnect, raiseWindow, moveAndResizeWindow, etc.) ...
 
 bool Server::connect(){
     display = XOpenDisplay(displayname);
@@ -43,8 +34,6 @@ void Server::disconnect(){
     }
 }
 
-// ... (Tus métodos existentes de manipulación de ventanas) ...
-
 _XEvent* Server::getEvent(){
     return &event;
 }
@@ -57,6 +46,11 @@ void Server::addRootSelectInput(long _eventMask){
     if (eventMask.contains(_eventMask)) return;
     eventMask.add(_eventMask);
 }
+
+void Server::quit(){
+    stop = true;
+}
+
 
 // --- MÉTODOS GRAB MODIFICADOS ---
 void Server::grabAnyKey(bool condition){
@@ -71,11 +65,6 @@ void Server::grabAnyKey(bool condition){
             GrabModeSync
         ); // owner_events = False
         XFlush(display);
-        if (result == GrabSuccess) {
-            std::cout << "XGrabKey(AnyKey, AnyModifier) exitoso. Modos: P=" << GrabModeAsync << ", K=" << GrabModeSync << std::endl;
-        } else {
-            std::cerr << "XGrabKey(AnyKey, AnyModifier) FALLÓ. Código: " << result << std::endl;
-        }
     }
 }
 
@@ -83,7 +72,6 @@ void Server::ungrabAnyKey(){
     if (display != nullptr) {
         XUngrabKey(display, AnyKey, AnyModifier, DefaultRootWindow(display));
         XFlush(display);
-        std::cout << "XUngrabKey(AnyKey, AnyModifier) llamado." << std::endl;
     }
 }
 
@@ -102,12 +90,6 @@ void Server::grabAnyButton(bool condition){
             None
         ); // owner_events = False
         XFlush(display);
-        if (result == GrabSuccess) {
-            std::cout   << "XGrabButton(AnyButton, AnyModifier) exitoso. Máscara eventos: " << (ButtonPressMask | ButtonReleaseMask | PointerMotionMask)
-                        << ", Modos: P=" << GrabModeSync << ", K=" << GrabModeAsync << std::endl;
-        } else {
-            std::cerr << "XGrabButton(AnyButton, AnyModifier) FALLÓ. Código: " << result << std::endl;
-        }
     }
 }
 
@@ -115,108 +97,60 @@ void Server::ungrabAnyButton(){
     if (display != nullptr) {
         XUngrabButton(display, AnyButton, AnyModifier, DefaultRootWindow(display));
         XFlush(display);
-        std::cout << "XUngrabButton(AnyButton, AnyModifier) llamado." << std::endl;
     }
 }
 
-// --- BUCLE DE EVENTOS MODIFICADO ---
 void Server::listen(){
-    // Determina si se necesitan grabs de teclado o ratón
     bool needs_key_grab = eventMask.contains(KeyPressMask) || eventMask.contains(KeyReleaseMask);
     bool needs_button_grab = eventMask.contains(ButtonPressMask) || eventMask.contains(ButtonReleaseMask) || eventMask.contains(PointerMotionMask);
 
-    // Intenta realizar los grabs.
-    // Usamos GrabModeSync para el teclado y el ratón para poder controlar
-    // el flujo de eventos y "dejarles pasar" con XAllowEvents.
-    // GrabModeAsync para el otro dispositivo para no bloquearlo.
-    if (needs_key_grab) {
-        grabAnyKey(true); // Teclado en modo Sync
-    }
-    if (needs_button_grab) {
-        // Necesitas especificar la máscara de eventos para XGrabButton
-        // Es la máscara de eventos que recibirás mientras el grab esté activo.
-        grabAnyButton(true); // Ratón en modo Sync
-    }
-
-    // XSelectInput sigue siendo necesario para eventos que NO son grabs,
-    // o para eventos que ocurren directamente en la ventana raíz y no son cubiertos por un grab.
+    grabAnyKey(needs_key_grab); // Teclado en modo Sync
+    grabAnyButton(needs_button_grab); // Ratón en modo Sync
     XSelectInput(display, DefaultRootWindow(display), eventMask.unwrap());
     XFlush(display); // Asegura que todos los comandos se envían al servidor
 
-    std::cout << "Iniciando bucle de escucha de eventos..." << std::endl;
-
     for(;;){ // Bucle infinito para escuchar eventos
         nextEvent(); // Rellena 'this->event'
-
-        // NOTA: Es crucial que el cast a la estructura de evento específica
-        // se haga *dentro* del case, después de verificar el tipo de evento.
-        // Y XAllowEvents solo debe llamarse para eventos que fueron grabados en modo Sync.
-
         switch (EventType(event.type)) {
             case EventType::keyPress:
             {
-                XKeyEvent* key_event = reinterpret_cast<XKeyEvent*>(&event);
-                for (auto& listener : listeners_keyPress) {
-                    listener(&event);
-                }
-                // Si el teclado fue grabado en Sync mode, debemos permitir que el evento continúe
-                // Usamos ReplayKeyboard para que el evento se reenvíe a la aplicación con foco
-                XAllowEvents(display, ReplayKeyboard, key_event->time);
+                for (auto& listener : listeners_keyPress) listener(&event);
+                XAllowEvents(display, ReplayKeyboard, cast<XKeyEvent*>(&event)->time);
                 XFlush(display); // Asegura que la instrucción XAllowEvents se envía
             }
             break;
 
             case EventType::keyRelease:
             {
-                XKeyEvent* key_event = reinterpret_cast<XKeyEvent*>(&event);
-                for (auto& listener : listeners_keyRelease) {
-                    listener(&event);
-                }
-                XAllowEvents(display, ReplayKeyboard, key_event->time);
+                for (auto& listener : listeners_keyRelease) listener(&event);
+                XAllowEvents(display, ReplayKeyboard, cast<XKeyEvent*>(&event)->time);
                 XFlush(display);
             }
             break;
 
             case EventType::buttonPress:
             {
-                XButtonEvent* button_event = reinterpret_cast<XButtonEvent*>(&event);
-                for (auto& listener : listeners_buttonPress) {
-                    listener(&event);
-                }
-                // Si el puntero fue grabado en Sync mode, debemos permitir que el evento continúe
-                XAllowEvents(display, ReplayPointer, button_event->time); // ReplayPointer para eventos de ratón
+                for (auto& listener : listeners_buttonPress) listener(&event);
+                XAllowEvents(display, ReplayPointer, cast<XButtonEvent*>(&event)->time); // ReplayPointer para eventos de ratón
                 XFlush(display);
             }
             break;
 
             case EventType::buttonRelease:
             {
-                XButtonEvent* button_event = reinterpret_cast<XButtonEvent*>(&event);
-                for (auto& listener : listeners_buttonRelease) {
-                    listener(&event);
-                }
-                XAllowEvents(display, ReplayPointer, button_event->time);
+                for (auto& listener : listeners_buttonRelease) listener(&event);
+                XAllowEvents(display, ReplayPointer, cast<XButtonEvent*>(&event)->time);
                 XFlush(display);
             }
             break;
 
             case EventType::motionNotify:
             {
-                XMotionEvent* motion_event = reinterpret_cast<XMotionEvent*>(&event);
-                for (auto& listener : listeners_motionNotify) {
-                    listener(&event);
-                }
-                XAllowEvents(display, ReplayPointer, motion_event->time);
+                for (auto& listener : listeners_motionNotify) listener(&event);
+                XAllowEvents(display, ReplayPointer, cast<XMotionEvent*>(&event)->time);
                 XFlush(display);
             }
             break;
-            // ... (Resto de tus cases para otros tipos de eventos, sin XAllowEvents incondicional) ...
-
-            // Aquí van el resto de tus 'case' de EventType.
-            // Para eventos que NO fueron grabados en modo Sync (como ConfigureRequest, Expose, etc.),
-            // NO debes llamar a XAllowEvents. Esos eventos ya fluyen normalmente.
-            // Solo los KeyPress/KeyRelease y ButtonPress/ButtonRelease/MotionNotify
-            // que están siendo interceptados por un grab Sync necesitan XAllowEvents.
 
             case EventType::enterNotify:
                 for (auto& listener : listeners_enterNotify) { listener(getEvent()); }
@@ -302,18 +236,9 @@ void Server::listen(){
             case EventType::selectionRequest:
                 for (auto& listener : listeners_selectionRequest) { listener(getEvent()); }
                 break;
-
-            default:
-                // Puedes imprimir eventos no manejados para depuración
-                // std::cout << "Evento no manejado: " << event.type << std::endl;
-                break;
         }
+        if(stop) break;
     }
-    // Estas líneas no se ejecutarán porque el bucle for(;;) es infinito.
-    // La liberación de grabs debe manejarse en el destructor o con un mecanismo de salida.
-    // XUngrabButton(display, AnyKey, AnyModifier, DefaultRootWindow(display)); // Esto estaba mal, era XUngrabKey
-    // XUngrabKey(display, AnyKey, AnyModifier, DefaultRootWindow(display));
-    // XFlush(display);
 }
 
 void Server::addRootEventListener(EventType type,EventCallback listener){
