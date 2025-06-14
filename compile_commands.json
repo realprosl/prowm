@@ -1,0 +1,58 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Iincludes",
+      "-c",
+      "-o",
+      "build/x11++/server.o",
+      "src/x11++/server.cpp"
+    ],
+    "directory": "/home/alberto/dev/c++/prowm",
+    "file": "/home/alberto/dev/c++/prowm/src/x11++/server.cpp",
+    "output": "/home/alberto/dev/c++/prowm/build/x11++/server.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Iincludes",
+      "-c",
+      "-o",
+      "build/x11++/mask.o",
+      "src/x11++/mask.cpp"
+    ],
+    "directory": "/home/alberto/dev/c++/prowm",
+    "file": "/home/alberto/dev/c++/prowm/src/x11++/mask.cpp",
+    "output": "/home/alberto/dev/c++/prowm/build/x11++/mask.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Iincludes",
+      "-c",
+      "-o",
+      "build/x11++/key.o",
+      "src/x11++/key.cpp"
+    ],
+    "directory": "/home/alberto/dev/c++/prowm",
+    "file": "/home/alberto/dev/c++/prowm/src/x11++/key.cpp",
+    "output": "/home/alberto/dev/c++/prowm/build/x11++/key.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-std=c++20",
+      "-Iincludes",
+      "-c",
+      "-o",
+      "build/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/home/alberto/dev/c++/prowm",
+    "file": "/home/alberto/dev/c++/prowm/src/main.cpp",
+    "output": "/home/alberto/dev/c++/prowm/build/main.o"
+  }
+]
