@@ -1,4 +1,4 @@
-#include<mask.hpp>
+#include"mask.hpp"
 
 MaskBit::MaskBit(long _initial) : data(_initial) {}
 

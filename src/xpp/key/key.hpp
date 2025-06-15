@@ -2,7 +2,8 @@
 #include<X11/X.h>
 #include<X11/keysym.h>
 #include<X11/Xutil.h>
-#include "event.hpp"
+#include<xpp/event/event.hpp>
+
 
 
 #pragma once

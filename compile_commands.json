@@ -3,56 +3,76 @@
     "arguments": [
       "/usr/bin/g++",
       "-std=c++20",
-      "-Iincludes",
+      "-Isrc",
+      "-I/usr/local/Cellar/libx11/1.8.12/include",
+      "-I/usr/local/Cellar/xorgproto/2024.1/include",
+      "-I/usr/local/Cellar/libxcb/1.17.0/include",
+      "-I/usr/local/Cellar/libxau/1.0.12/include",
+      "-I/usr/local/Cellar/libxdmcp/1.1.5/include",
       "-c",
       "-o",
-      "build/x11++/server.o",
-      "src/x11++/server.cpp"
+      "build/xpp/server/server.o",
+      "src/xpp/server/server.cpp"
     ],
-    "directory": "/home/alberto/dev/c++/prowm",
-    "file": "/home/alberto/dev/c++/prowm/src/x11++/server.cpp",
-    "output": "/home/alberto/dev/c++/prowm/build/x11++/server.o"
+    "directory": "/Users/apg/dev/c++/prowm",
+    "file": "/Users/apg/dev/c++/prowm/src/xpp/server/server.cpp",
+    "output": "/Users/apg/dev/c++/prowm/build/xpp/server/server.o"
   },
   {
     "arguments": [
       "/usr/bin/g++",
       "-std=c++20",
-      "-Iincludes",
+      "-Isrc",
+      "-I/usr/local/Cellar/libx11/1.8.12/include",
+      "-I/usr/local/Cellar/xorgproto/2024.1/include",
+      "-I/usr/local/Cellar/libxcb/1.17.0/include",
+      "-I/usr/local/Cellar/libxau/1.0.12/include",
+      "-I/usr/local/Cellar/libxdmcp/1.1.5/include",
       "-c",
       "-o",
-      "build/x11++/mask.o",
-      "src/x11++/mask.cpp"
+      "build/xpp/key/key.o",
+      "src/xpp/key/key.cpp"
     ],
-    "directory": "/home/alberto/dev/c++/prowm",
-    "file": "/home/alberto/dev/c++/prowm/src/x11++/mask.cpp",
-    "output": "/home/alberto/dev/c++/prowm/build/x11++/mask.o"
+    "directory": "/Users/apg/dev/c++/prowm",
+    "file": "/Users/apg/dev/c++/prowm/src/xpp/key/key.cpp",
+    "output": "/Users/apg/dev/c++/prowm/build/xpp/key/key.o"
   },
   {
     "arguments": [
       "/usr/bin/g++",
       "-std=c++20",
-      "-Iincludes",
+      "-Isrc",
+      "-I/usr/local/Cellar/libx11/1.8.12/include",
+      "-I/usr/local/Cellar/xorgproto/2024.1/include",
+      "-I/usr/local/Cellar/libxcb/1.17.0/include",
+      "-I/usr/local/Cellar/libxau/1.0.12/include",
+      "-I/usr/local/Cellar/libxdmcp/1.1.5/include",
       "-c",
       "-o",
-      "build/x11++/key.o",
-      "src/x11++/key.cpp"
+      "build/xpp/mask/mask.o",
+      "src/xpp/mask/mask.cpp"
     ],
-    "directory": "/home/alberto/dev/c++/prowm",
-    "file": "/home/alberto/dev/c++/prowm/src/x11++/key.cpp",
-    "output": "/home/alberto/dev/c++/prowm/build/x11++/key.o"
+    "directory": "/Users/apg/dev/c++/prowm",
+    "file": "/Users/apg/dev/c++/prowm/src/xpp/mask/mask.cpp",
+    "output": "/Users/apg/dev/c++/prowm/build/xpp/mask/mask.o"
   },
   {
     "arguments": [
       "/usr/bin/g++",
       "-std=c++20",
-      "-Iincludes",
+      "-Isrc",
+      "-I/usr/local/Cellar/libx11/1.8.12/include",
+      "-I/usr/local/Cellar/xorgproto/2024.1/include",
+      "-I/usr/local/Cellar/libxcb/1.17.0/include",
+      "-I/usr/local/Cellar/libxau/1.0.12/include",
+      "-I/usr/local/Cellar/libxdmcp/1.1.5/include",
       "-c",
       "-o",
       "build/main.o",
       "src/main.cpp"
     ],
-    "directory": "/home/alberto/dev/c++/prowm",
-    "file": "/home/alberto/dev/c++/prowm/src/main.cpp",
-    "output": "/home/alberto/dev/c++/prowm/build/main.o"
+    "directory": "/Users/apg/dev/c++/prowm",
+    "file": "/Users/apg/dev/c++/prowm/src/main.cpp",
+    "output": "/Users/apg/dev/c++/prowm/build/main.o"
   }
 ]

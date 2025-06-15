@@ -1,7 +1,7 @@
-#include "x11++/key.hpp"
-#include <x11++/eventType.hpp>
-#include<x11++/server.hpp>
-#include<iostream>
+#include <xpp/event/eventType.hpp>
+#include<xpp/server/server.hpp>
+#include<xpp/key/keyType.hpp>
+
 
 
 
@@ -9,14 +9,11 @@ int main(){
     auto server = x::Server();
     if(!server.connect()) return 1;
 
-    server.addRootEventListener(x::EventType::keyPress, [&](x::Event* event){
-        std::cout << "keyPress\n"; 
-        if(key::is_Q(*event) || key::is_q(*event)) server.quit();
-    });
+    {
+        using namespace key;
+        server.keyMap(Control|Shift, "p", [](x::Event* e){});
+    }
 
-    server.addRootEventListener(x::EventType::buttonPress, [&](x::Event* event){
-        std::cout << "buttonPress\n"; 
-    });
     server.listen();
     return 0;
 }

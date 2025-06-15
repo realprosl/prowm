@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/apg/dev/c++/prowm/src",
+      "program": "/Users/apg/dev/c++/prowm/src/build/Debug/outDebug"
+    }
+  ]
+}

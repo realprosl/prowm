@@ -1,4 +1,4 @@
-#include <x11++/key.hpp>
+#include "key.hpp"
 
 namespace key {
     static KeySym get_keysym_from_event(Event& event) {
